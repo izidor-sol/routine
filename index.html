@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>몰입 루틴 트래커</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/0d/Vincent_van_Gogh_-_Almond_blossom_-_Google_Art_Project.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: 60% 20%; /* 꽃이 잘 보이도록 위치 조정 */
+            padding: 30px;
+            color: #2f3e46;
+        }
+        h1 {
+            color: #1d3557;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #ffffff;  /* 완전 불투명 */
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 15px;
+            text-align: left;
+            font-size: 16px;
+        }
+        th {
+            background-color: #a8dadc;
+            text-align: center;
+        }
+        .checkbox-label {
+            margin-right: 20px;
+        }
+        .cycle-container {
+            margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #457b9d;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+        button:hover {
+            background-color: #1d3557;
+        }
+    </style>
+    <script>
+        function addCycle() {
+            const container = document.getElementById("cycles");
+            const original = document.querySelector(".cycle-template");
+            const clone = original.cloneNode(true);
+            clone.classList.remove("cycle-template");
+            clone.style.display = "block";
+
+            const timestamp = document.createElement("input");
+            timestamp.type = "hidden";
+            timestamp.className = "timestamp";
+            timestamp.value = new Date().toISOString();
+            clone.appendChild(timestamp);
+
+            container.appendChild(clone);
+        }
+
+        function cleanupOldCycles() {
+            const now = new Date();
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const cycles = document.querySelectorAll(".cycle-container");
+            cycles.forEach(cycle => {
+                const stamp = cycle.querySelector(".timestamp");
+                if (stamp) {
+                    const cycleDate = new Date(stamp.value);
+                    if (cycleDate < weekAgo) {
+                        cycle.remove();
+                    }
+                }
+            });
+        }
+
+        window.onload = function() {
+            cleanupOldCycles();
+        }
+    </script>
+</head>
+<body>
+    <h1>몰입 루틴 트래커</h1>
+    <div id="cycles">
+        <div class="cycle-container">
+            <table>
+                <tr>
+                    <th>구성</th>
+                    <th>시간</th>
+                    <th>체크</th>
+                </tr>
+                <tr>
+                    <td>유산소 운동</td>
+                    <td>10분</td>
+                    <td>
+                        <label class="checkbox-label"><input type="checkbox"> 심박수 상승</label>
+                        <label class="checkbox-label"><input type="checkbox"> 기분 체크</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>감정 사용해서 연습</td>
+                    <td>60분</td>
+                    <td>
+                        <label class="checkbox-label"><input type="checkbox"> 감정과 동작제어 결합 (편도체)</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>짧은 회복</td>
+                    <td>10~30분</td>
+                    <td>
+                        <label class="checkbox-label"><input type="checkbox"> 명상</label>
+                        <label class="checkbox-label"><input type="checkbox"> 산책</label>
+                        <label class="checkbox-label"><input type="checkbox"> 샤워</label>
+                    </td>
+                </tr>
+            </table>
+            <input type="hidden" class="timestamp" value="2025-04-14T06:25:14.079771">
+        </div>
+    </div>
+
+    <!-- 숨겨진 템플릿 -->
+    <div class="cycle-container cycle-template" style="display:none;">
+        <table>
+            <tr>
+                <th>구성</th>
+                <th>시간</th>
+                <th>체크</th>
+            </tr>
+            <tr>
+                <td>유산소 운동</td>
+                <td>10분</td>
+                <td>
+                    <label class="checkbox-label"><input type="checkbox"> 심박수 상승</label>
+                    <label class="checkbox-label"><input type="checkbox"> 기분 체크</label>
+                </td>
+            </tr>
+            <tr>
+                <td>감정 사용해서 연습</td>
+                <td>60분</td>
+                <td>
+                    <label class="checkbox-label"><input type="checkbox"> 감정과 동작제어 결합 (편도체)</label>
+                </td>
+            </tr>
+            <tr>
+                <td>짧은 회복</td>
+                <td>10~30분</td>
+                <td>
+                    <label class="checkbox-label"><input type="checkbox"> 명상</label>
+                    <label class="checkbox-label"><input type="checkbox"> 산책</label>
+                    <label class="checkbox-label"><input type="checkbox"> 샤워</label>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <button onclick="addCycle()">+ 사이클 추가</button>
+</body>
+</html>
